@@ -29,7 +29,9 @@
         wrapper: {
           outer: {
             idName: null,
-            className: 'fTHLC-outer-wrapper'
+            className: 'fTHLC-outer-wrapper',
+            width : null,
+            height: null
           },
           inner: {
             idName: null,
@@ -54,21 +56,33 @@
       var scrollHeight = cfg.scroll.height;
       var fixedLeftWidth = null;
       var fixedHeadHeight = null;
+      var wrapperOuterWidth = cfg.wrapper.outer.width;
+      var wrapperOuterHeight = cfg.wrapper.outer.height;
 
       function getScrollWidth(table) {
         var width = scrollWidth;
-        
-        if(!width)
-          width = table.outerWidth(true) - getFixedLeftWidth(table);
-        
+
+        if(!width){
+          if( wrapperOuterWidth ){
+            width = wrapperOuterWidth;
+          }else{
+            width = table.outerWidth(true) - getFixedLeftWidth(table);
+          }
+        }
+
         return width;
       }
       
       function getScrollHeight(table) {
         var height = scrollHeight;
-        
-        if(!height)
-          height = table.outerHeight(true) - getFixedHeadHeight(table);
+
+        if(!height){
+          if( wrapperOuterHeight ){
+            height = wrapperOuterHeight;
+          }else{
+            height = table.outerHeight(true) - getFixedHeadHeight(table);
+          }
+        }
         
         return height;
       }
@@ -145,7 +159,6 @@
 
           fixedLeftWidth = width;
         }
-
         return width;
       }
       
@@ -164,8 +177,8 @@
           .wrap($(document.createElement('div'))
           .attr('id', cfg.wrapper.outer.idName)
           .addClass(cfg.wrapper.outer.className)
-          .css('width', getScrollWidth(table))
-          .css('height', getScrollHeight(table))
+          .css('width', cfg.wrapper.outer.width != null ? cfg.wrapper.outer.width : getScrollWidth(table))
+          .css('height', cfg.wrapper.outer.height != null? cfg.wrapper.outer.height : getScrollHeight(table))
           .css('position', 'relative')
           .css('padding-left', getFixedLeftWidth(table)+'px')
           .css('padding-top', getFixedHeadHeight(table)+'px')
